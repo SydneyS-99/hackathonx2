@@ -1,14 +1,9 @@
 package hackathon.ticketmaster;
 
+import hackathon.ticketmaster.EmbeddedResponse;
+
 public class ApiResponse {
-    int resultCount;
-    ApiResult[] results;
 
-    public int getResultCount() {
-        return this.resultCount;
-    }
+    EmbeddedResponse[] _embedded;
 
-    public ApiResult[] getResults() {
-        return this.results;
-    }
 } // ApiResponse
