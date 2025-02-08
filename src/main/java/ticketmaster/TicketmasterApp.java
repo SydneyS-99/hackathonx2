@@ -20,6 +20,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 import javafx.scene.layout.Pane;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 
 public class TicketmasterApp extends Application {
 
@@ -34,18 +36,24 @@ public class TicketmasterApp extends Application {
     VBox all;
     ImageView imageView;
     Image backgroundImage;
+    Label search2;
+    TextField searchBar2;
+    Button searchButton;
 
 
     public TicketmasterApp() {
         this.root = new HBox();
         this.prevButton = new Button("<");
         this.nextButton = new Button(">");
+        this.search2 = new Label("State: ");
+        this.searchBar2 = new TextField("State code ");
+        this.searchButton = new Button("Search");
         this.all = new VBox();
         this.backgroundImage = new Image("file:rocknroll.jpg");
         this.imageView = new ImageView(this.backgroundImage);
         this.bottom = new HBox(5);
-        this.search = new Label("Search: ");
-        this.searchBar = new TextField("Type..");
+        this.search = new Label("Artist/Genre: ");
+        this.searchBar = new TextField("Ex: Eagles");
     }
 
 
@@ -62,15 +70,16 @@ public class TicketmasterApp extends Application {
 
     @Override
     public void init() {
-        bottom.getChildren().addAll(search, searchBar);
+        search.setPadding(new Insets(4, 0, 0, 0));
+        search2.setPadding(new Insets(4, 0, 0, 0));
+        bottom.getChildren().addAll(search, searchBar, search2, searchBar2, searchButton);
         imageView.setFitWidth(600);
         imageView.setFitHeight(400);
         all.getChildren().addAll(bottom,imageView);
+        //        all.setAlignment(Pos.CENTER);
         root.getChildren().add(all);
         HBox.setHgrow(searchBar, Priority.ALWAYS);
         bottom.setMaxWidth(Double.MAX_VALUE);
-
-
     }
 
     @Override
