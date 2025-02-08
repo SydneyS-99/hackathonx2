@@ -1,8 +1,9 @@
 package hackathon.ticketmaster;
 
 import hackathon.ticketmaster.EventStatus;
+import hackathon.ticketmaster.EventDate;
 
-public class EventDates {
+public class ApiEventDate {
 
     EventDate start;
     EventDate end;

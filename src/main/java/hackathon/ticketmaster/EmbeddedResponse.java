@@ -1,9 +1,9 @@
 package hackathon.ticketmaster;
 
-import hackathon.ticketmaster.Image;
+import hackathon.ticketmaster.ApiEvent;
 
-public class EmbeddedReponse {
+public class EmbeddedResponse {
 
-    Event[] events;
+    ApiEvent[] events;
 
 } //EmbeddedResponse

@@ -1,7 +1,7 @@
 package hackathon.ticketmaster;
 
 import hackathon.ticketmaster.ApiImage;
-import hackathon.ticketmaster.APIEventDate;
+import hackathon.ticketmaster.ApiEventDate;
 
 public class ApiEvent {
 
