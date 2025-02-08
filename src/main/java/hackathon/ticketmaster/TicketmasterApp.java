@@ -2,7 +2,7 @@ package hackathon.ticketmaster;
 
 import hackathon.ticketmaster.ApiResponse;
 import hackathon.ticketmaster.ApiResult;
-
+import javafx.geometry.Insets;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpClient;
@@ -44,9 +44,16 @@ public class TicketmasterApp extends Application{
     Button prevButton;
     Button nextButton;
     Label search;
+    Label search2;
     TextField searchBar;
+    TextField searchBar2;
     VBox bottom;
     VBox all;
+    ImageView imageView;
+    Image backgroundImage;
+    Button searchButton;
+    //Button eventDetails;
+
 
     public TicketmasterApp() {
         this.stage = null;
@@ -58,6 +65,11 @@ public class TicketmasterApp extends Application{
         this.all = new VBox();
         this.search = new Label("Search: ");
         this.searchBar = new TextField("Type..");
+        this.search2 = new Label("State: ");
+        this.searchBar2 = new TextField("State code");
+        this.searchButton = new Button("Search");
+        this.backgroundImage = new Image("file:rocknroll.jpg");
+        this.imageView = new ImageView(this.backgroundImage);
     }
 
 
@@ -100,13 +112,14 @@ public class TicketmasterApp extends Application{
             if (response.statusCode() != 200) {
                 throw new IOException(uri + "ERROR:" + response.statusCode());
             }
+            System.out.println("Raw JSON Response: " + response.body());
             return GSON.fromJson(response.body(), ApiResponse.class);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             return null;
             }
     } //makerequest
-    private List<String> extractUri(ApiResponse resp) {
+    private List<String> extractName(ApiResponse resp) {
         Set<String> uriSet = new HashSet<>();
         List<String> uris = new ArrayList<>();
         if (resp != null && resp.getResults() != null) {
@@ -121,15 +134,19 @@ public class TicketmasterApp extends Application{
         return uris;
     }//extractUri
 
-
-
     @Override
     public void init() {
-        bottom.getChildren().addAll(search, searchBar);
-        all.getChildren().addAll(bottom);
+        searchButton.setDisable(false);
+        search.setPadding(new Insets(4, 0, 0, 0));
+        search2.setPadding(new Insets(4, 0, 0, 0));
+        imageView.setFitWidth(600);
+        imageView.setFitHeight(400);
+        bottom.getChildren().addAll(search, searchBar, search2, searchBar2, searchButton);
+        all.getChildren().addAll(bottom, imageView);
         root.getChildren().add(all);
         HBox.setHgrow(searchBar, Priority.ALWAYS);
         bottom.setMaxWidth(Double.MAX_VALUE);
+
     }
 
     @Override
@@ -145,7 +162,18 @@ public class TicketmasterApp extends Application{
         Image backgroundImage = new Image("file:/Users/nickiazadi/Downloads/rocknroll.jpg");
         ImageView imageView = new ImageView(backgroundImage);
 
+        searchButton.setOnAction(event -> {
+            searchButton.setDisable(true);
+            String keyword = searchBar.getCharacters().toString();
+            String state = searchBar2.getCharacters().toString();
+            String url = createUrl(keyword, state);
+            ApiResponse newResponse =  makeRequest(url);
+            List<String> eventNames = extractName(newResponse);
+            CustomHBox customHBox = new CustomHBox(eventNames);
+            all.getChildren().add(customHBox);
+            root.getChildren().add(all);
 
+        });
         imageView.setFitWidth(600);
         imageView.setFitHeight(400);
         imageView.setPreserveRatio(true);
