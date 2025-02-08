@@ -1,5 +1,6 @@
 package ticketmaster;
 
+import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.scene.layout.HBox;
 import javafx.application.Application;
@@ -10,12 +11,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.Scene;
-import javafx.scene.Stage;
+import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
+import javafx.scene.layout.Pane;
 
-
-public class TicketmasterApp {
+public class TicketmasterApp extends Application {
 
     Stage stage;
     Scene scene;
@@ -27,8 +28,6 @@ public class TicketmasterApp {
 
 
     public TicketmasterApp() {
-        this.stage = null;
-        this.scene = null;
         this.root = new HBox();
         this.prevButton = new Button("<");
         this.nextButton = new Button(">");
@@ -50,7 +49,6 @@ public class TicketmasterApp {
 
     @Override
     public void init() {
-
     }
 
     @Override
@@ -61,9 +59,8 @@ public class TicketmasterApp {
         this.stage.setTitle("ermmmm");
         this.stage.setScene(this.scene);
         this.stage.sizeToScene();
-        this.stage.show();
         Platform.runLater(() -> this.stage.setResizable(false));
-
+        this.stage.show();
     }
 
     @Override
