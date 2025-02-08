@@ -10,6 +10,9 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.net.URI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 import java.util.List;
 import java.util.Arrays;
@@ -139,6 +142,16 @@ public class TicketmasterApp extends Application{
         this.stage.sizeToScene();
         this.stage.show();
         Platform.runLater(() -> this.stage.setResizable(false));
+        Image backgroundImage = new Image("file:/Users/nickiazadi/Downloads/rocknroll.jpg");
+        ImageView imageView = new ImageView(backgroundImage);
+
+
+        imageView.setFitWidth(600);
+        imageView.setFitHeight(400);
+        imageView.setPreserveRatio(true);
+        //StackPane root = new StackPane();
+        root.getChildren().add(imageView);
+
 
     }
 

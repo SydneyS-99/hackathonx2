@@ -1,5 +1,8 @@
 package ticketmaster;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.scene.layout.HBox;
@@ -29,7 +32,8 @@ public class TicketmasterApp extends Application {
     TextField searchBar;
     HBox bottom;
     VBox all;
-
+    ImageView imageView;
+    Image backgroundImage;
 
 
     public TicketmasterApp() {
@@ -37,8 +41,9 @@ public class TicketmasterApp extends Application {
         this.prevButton = new Button("<");
         this.nextButton = new Button(">");
         this.all = new VBox();
+        this.backgroundImage = new Image("file:rocknroll.jpg");
+        this.imageView = new ImageView(this.backgroundImage);
         this.bottom = new HBox(5);
-
         this.search = new Label("Search: ");
         this.searchBar = new TextField("Type..");
     }
@@ -58,10 +63,13 @@ public class TicketmasterApp extends Application {
     @Override
     public void init() {
         bottom.getChildren().addAll(search, searchBar);
-        all.getChildren().addAll(bottom);
+        imageView.setFitWidth(600);
+        imageView.setFitHeight(400);
+        all.getChildren().addAll(bottom,imageView);
         root.getChildren().add(all);
         HBox.setHgrow(searchBar, Priority.ALWAYS);
         bottom.setMaxWidth(Double.MAX_VALUE);
+
 
     }
 
