@@ -16,9 +16,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
-
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -41,15 +42,17 @@ public class TicketmasterApp extends Application{
     Button nextButton;
     Label search;
     TextField searchBar;
-
+    VBox bottom;
+    VBox all;
 
     public TicketmasterApp() {
         this.stage = null;
         this.scene = null;
         this.root = new HBox();
+        this.bottom = new VBox(5);
         this.prevButton = new Button("<");
         this.nextButton = new Button(">");
-
+        this.all = new VBox();
         this.search = new Label("Search: ");
         this.searchBar = new TextField("Type..");
     }
@@ -119,7 +122,11 @@ public class TicketmasterApp extends Application{
 
     @Override
     public void init() {
-
+        bottom.getChildren().addAll(search, searchBar);
+        all.getChildren().addAll(bottom);
+        root.getChildren().add(all);
+        HBox.setHgrow(searchBar, Priority.ALWAYS);
+        bottom.setMaxWidth(Double.MAX_VALUE);
     }
 
     @Override
