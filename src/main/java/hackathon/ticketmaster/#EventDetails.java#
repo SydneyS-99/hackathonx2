@@ -1,0 +1,88 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public class EventDetails {
+
+    public static void main(String[] args) {
+
+        // JSON string
+        String responseJson = "{\n" +
+                "  \"_embedded\": {\n" +
+                "    \"events\": [\n" +
+                "      {\n" +
+                "        \"name\": \"Kendrick Lamar and SZA : Suites\",\n" +
+                "        \"id\": \"Za5ju3rKuqZDdnBKHCD14dk_hWnVegrhWi\",\n" +
+                "        \"type\": \"event\",\n" +
+                "        \"locale\": \"en-us\",\n" +
+                "        \"images\": [\n" +
+                "          {\n" +
+                "            \"url\": \"https://s1.ticketm.net/dam/c/8cf/a6653880-7899-4f67-8067-1f95f4d158cf_124761_RETINA_LANDSCAPE_16_9.jpg\",\n" +
+                "            \"width\": 1136,\n" +
+                "            \"height\": 639\n" +
+                "          }\n" +
+                "        ],\n" +
+                "        \"dates\": {\n" +
+                "          \"start\": {\n" +
+                "            \"localDate\": \"2025-04-29\",\n" +
+                "            \"localTime\": \"19:00:00\",\n" +
+                "            \"dateTime\": \"2025-04-29T23:00:00Z\"\n" +
+                "          },\n" +
+                "          \"end\": {\n" +
+                "            \"localDate\": \"2025-04-29\",\n" +
+                "            \"localTime\": \"23:00:00\",\n" +
+                "            \"dateTime\": \"2025-04-30T03:00:00Z\"\n" +
+                "          },\n" +
+                "          \"timezone\": \"America/New_York\"\n" +
+                "        },\n" +
+                "        \"ticketing\": {\n" +
+                "          \"safeTix\": {\n" +
+                "            \"enabled\": true\n" +
+                "          },\n" +
+                "          \"id\": \"ticketing\"\n" +
+                "        },\n" +
+                "        \"_embedded\": {\n" +
+                "          \"venues\": [\n" +
+                "            {\n" +
+                "              \"name\": \"Mercedes-Benz Stadium\",\n" +
+                "              \"id\": \"Za5ju3rKuqZDdi1Zcgkig51nC7it0Yj7WL\",\n" +
+                "              \"city\": \"Atlanta\",\n" +
+                "              \"state\": \"Georgia\",\n" +
+                "              \"country\": \"United States Of America\",\n" +
+                "              \"address\": {\n" +
+                "                \"line1\": \"1 AMB Drive NW\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        }\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}";
+
+        // Parsing the JSON string
+        JSONObject jsonResponse = new JSONObject(responseJson);
+        JSONObject embedded = jsonResponse.getJSONObject("_embedded");
+        JSONArray events = embedded.getJSONArray("events");
+        JSONObject event = events.getJSONObject(0);
+
+        // Extracting data
+        String eventName = event.getString("name");
+        String eventId = event.getString("id");
+        String eventType = event.getString("type");
+        String locale = event.getString("locale");
+
+        JSONObject dates = event.getJSONObject("dates");
+        JSONObject start = dates.getJSONObject("start");
+        String eventStartDate = start.getString("localDate");
+        String eventStartTime = start.getString("localTime");
+
+        JSONObject end = dates.getJSONObject("end");
+        String eventEndDate = end.getString("localDate");
+        String eventEndTime = end.getString("localTime");
+
+        JSONObject venue = event.getJSONObject("_embedded").getJSONArray("venues").getJSONObject(0);
+        String venueName = venue.getString("name");
+        String venueAddress = venue.getJSONObject("address").getString("line1");
+        String venueCity = venue.getString("city");
+        String venueState = venue.getString("state");
+        String venueCountry = venue.getString("country");

@@ -109,14 +109,36 @@ public class TicketmasterApp extends Application {
             searchButton.setDisable(true);
             String keyword = searchBar.getCharacters().toString();
             String state = searchBar2.getCharacters().toString();
-            createUrl(keyword, state);
+            List<String> nameList = createUrl(keyword, state);
+            if (nameList.isEmpty()) {
+                System.out.println("Empty list");
+            }
+            //ApiEvent[] eventArray = nameList.toArray(new ApiEvent[0]);
+            ApiEvent[] eventArray = nameList.stream()
+            .map(name -> new ApiEvent(name)) // Convert each String to an ApiEvent
+            .toArray(ApiEvent[]::new);
+
+            CustomHBox customHBox = new CustomHBox(eventArray);
+            root.getChildren().add(customHBox);
+            imageView.setVisible(false);
+            System.out.println("CustomHBox added. Children count: " + root.getChildren().size());
             searchButton.setDisable(false);
+            imageView.setVisible(false);
+            customHBox.setVisible(true);
+            customHBox.setPrefWidth(Double.MAX_VALUE); // Set it to fill available width
+            customHBox.setPrefHeight(Double.MAX_VALUE); // Set it to fill available height
+            HBox.setHgrow(customHBox, Priority.ALWAYS);
+
+            Platform.runLater(() -> {
+                System.out.println("CustomHBox width: " + customHBox.getWidth());
+                System.out.println("CustomHBox height: " + customHBox.getHeight());
+            });
         };
 
         searchButton.setOnAction(searchForResult);
-        imageView.setFitWidth(600);
-        imageView.setFitHeight(400);
-        imageView.setPreserveRatio(true);
+        //imageView.setFitWidth(600);
+        //imageView.setFitHeight(400);
+        //imageView.setPreserveRatio(true);
 
     }
 
@@ -140,7 +162,7 @@ public class TicketmasterApp extends Application {
 
     }
 
-        public void showAlert(Throwable cause) {
+    public void showAlert(Throwable cause) {
 
         TextArea textarea = new TextArea("URI: ");
         textarea.appendText("\n\nException: " + cause.toString());
@@ -151,7 +173,8 @@ public class TicketmasterApp extends Application {
     }
 
 
-    public void createUrl(String keyword, String state) {
+    public List<String> createUrl(String keyword, String state) {
+        List<String> namesList = new ArrayList<>();
         System.out.println("createUrl() running");
         try {
             String baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json?";
@@ -172,14 +195,16 @@ public class TicketmasterApp extends Application {
             System.out.println("JSON response: " + jsonResponse);
             responseObject = GSON.<ApiResponse>fromJson(jsonResponse, ApiResponse.class);
             System.out.println("After GSON");
-            extractName(responseObject);
+            namesList = extractName(responseObject);
             System.out.println("done with extract");
 
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
         }
+        return namesList;
+
     } //create url
-    private void  extractName(ApiResponse resp) {
+    private List<String> extractName(ApiResponse resp) {
         System.out.println("in extractName()");
         Set<String> nameSet = new HashSet<>();
         List<String> eventNames = new ArrayList<>();
@@ -190,6 +215,7 @@ public class TicketmasterApp extends Application {
                 if (event != null && event.name != null) {
                     if (nameSet.add(event.name)) {  // Ensure uniqueness
                         eventNames.add(event.name);
+
                     }
                 }
 
@@ -200,9 +226,10 @@ public class TicketmasterApp extends Application {
         for (String events: eventNames) {
             System.out.println(events);
         }
+        return eventNames;
 
-        CustomHBox customHBox = new CustomHBox(eventNames);
-        root.getChildren().add(customHBox);
+        //CustomHBox customHBox = new CustomHBox(eventNames);
+        //root.getChildren().add(customHBox);
     }//extractUri
 
 
