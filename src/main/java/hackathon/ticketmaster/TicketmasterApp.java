@@ -86,7 +86,7 @@ public class TicketmasterApp extends Application {
         this.search2 = new Label("State: ");
         this.searchBar2 = new TextField("State code");
         this.searchButton = new Button("Search");
-        this.backgroundImage = new Image("file:rocknroll.jpg");
+        this.backgroundImage = new Image("file:Attachment-1.jpeg");
         this.imageView = new ImageView(this.backgroundImage);
     }
 
