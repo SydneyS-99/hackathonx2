@@ -13,6 +13,9 @@ import com.google.gson.GsonBuilder;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.event.EventHandler;
+import javafx.event.Event;
+import javafx.event.ActionEvent;
 
 import java.util.List;
 import java.util.Arrays;
@@ -36,53 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javafx.scene.layout.Pane;
 
-public class TicketmasterApp extends Application{
-
-    Stage stage;
-    Scene scene;
-    Pane root;
-    Button prevButton;
-    Button nextButton;
-    Label search;
-    Label search2;
-    TextField searchBar;
-    TextField searchBar2;
-    VBox bottom;
-    VBox all;
-    ImageView imageView;
-    Image backgroundImage;
-    Button searchButton;
-    //Button eventDetails;
-
-
-    public TicketmasterApp() {
-        this.stage = null;
-        this.scene = null;
-        this.root = new HBox();
-        this.bottom = new VBox(5);
-        this.prevButton = new Button("<");
-        this.nextButton = new Button(">");
-        this.all = new VBox();
-        this.search = new Label("Search: ");
-        this.searchBar = new TextField("Type..");
-        this.search2 = new Label("State: ");
-        this.searchBar2 = new TextField("State code");
-        this.searchButton = new Button("Search");
-        this.backgroundImage = new Image("file:rocknroll.jpg");
-        this.imageView = new ImageView(this.backgroundImage);
-    }
-
-
-    public void showAlert(Throwable cause) {
-
-        TextArea textarea = new TextArea("URI: ");
-        textarea.appendText("\n\nException: " + cause.toString());
-        textarea.setEditable(false);
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setResizable(true);
-        alert.showAndWait();
-    }
-
+public class TicketmasterApp extends Application {
 
     //HTTPClient
     public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
@@ -94,8 +51,108 @@ public class TicketmasterApp extends Application{
         .setPrettyPrinting()
         .create();
 
+
+    Stage stage;
+    Scene scene;
+    Button prevButton;
+    Button nextButton;
+    Label search;
+    Label search2;
+    TextField searchBar;
+    TextField searchBar2;
+    HBox topBar;
+    VBox root;
+    ImageView imageView;
+    Image backgroundImage;
+    Button searchButton;
+    //Button eventDetails;
+
+
+    public TicketmasterApp() {
+        this.topBar = new HBox(5);
+        this.prevButton = new Button("<");
+        this.nextButton = new Button(">");
+        this.root = new VBox();
+        this.search = new Label("Search: ");
+        this.searchBar = new TextField("Type..");
+        this.search2 = new Label("State: ");
+        this.searchBar2 = new TextField("State code");
+        this.searchButton = new Button("Search");
+        this.backgroundImage = new Image("file:rocknroll.jpg");
+        this.imageView = new ImageView(this.backgroundImage);
+        backgroundImage = new Image("file:/Users/nickiazadi/Downloads/rocknroll.jpg");
+        imageView = new ImageView(backgroundImage);
+
+    }
+
+    @Override
+    public void init() {
+        System.out.println("init() called");
+        topBar.getChildren().addAll(search, searchBar, search2, searchBar2, searchButton);
+        root.getChildren().addAll(topBar, imageView);
+        HBox.setHgrow(searchBar, Priority.ALWAYS);
+        topBar.setMaxWidth(Double.MAX_VALUE);
+        search.setPadding(new Insets(4, 0, 0, 0));
+        search2.setPadding(new Insets(4, 0, 0, 0));
+        imageView.setFitWidth(600);
+        imageView.setFitHeight(400);
+
+
+        EventHandler<ActionEvent> searchForResult = (ActionEvent ae) -> {
+            System.out.println("yeehaw");
+             searchButton.setDisable(true);
+            String keyword = searchBar.getCharacters().toString();
+            String state = searchBar2.getCharacters().toString();
+            String url = createUrl(keyword, state);
+            System.out.println(url);
+            ApiResponse newResponse =  makeRequest(url);
+            List<String> eventNames = extractName(newResponse);
+            CustomHBox customHBox = new CustomHBox(eventNames);
+            root.getChildren().add(customHBox);
+        };
+
+        searchButton.setOnAction(searchForResult);
+        imageView.setFitWidth(600);
+        imageView.setFitHeight(400);
+        imageView.setPreserveRatio(true);
+        //StackPane root = new StackPane();
+
+    }
+
+    @Override
+    public void start(Stage stage) {
+        System.out.println("start() called");
+        this.stage = stage;
+        this.scene = new Scene(this.root);
+        this.stage.setOnCloseRequest(event -> Platform.exit());
+        this.stage.setTitle("ermmmm");
+        this.stage.setScene(this.scene);
+        this.stage.sizeToScene();
+        this.stage.show();
+        Platform.runLater(() -> this.stage.setResizable(false));
+
+    }
+
+    @Override
+    public void stop() {
+        System.out.println("stop() called");
+
+    }
+
+        public void showAlert(Throwable cause) {
+
+        TextArea textarea = new TextArea("URI: ");
+        textarea.appendText("\n\nException: " + cause.toString());
+        textarea.setEditable(false);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setResizable(true);
+        alert.showAndWait();
+    }
+
+
     public String createUrl(String keyword, String state) {
         String baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json";
+        System.out.println(baseUrl);
         String apiKey = "vPAEFFJwHsnJqoTOHwtBUeY0hjdiUrS0";
         keyword = keyword.replace(" ", "%20");
         String finalUrl = baseUrl + "?apikey=" + apiKey +
@@ -140,59 +197,7 @@ public class TicketmasterApp extends Application{
 
     }//extractUri
 
-    @Override
-    public void init() {
-        searchButton.setDisable(false);
-        search.setPadding(new Insets(4, 0, 0, 0));
-        search2.setPadding(new Insets(4, 0, 0, 0));
-        imageView.setFitWidth(600);
-        imageView.setFitHeight(400);
-        bottom.getChildren().addAll(search, searchBar, search2, searchBar2, searchButton);
-        all.getChildren().addAll(bottom, imageView);
-        root.getChildren().add(all);
-        HBox.setHgrow(searchBar, Priority.ALWAYS);
-        bottom.setMaxWidth(Double.MAX_VALUE);
-
-    }
-
-    @Override
-    public void start(Stage stage) {
-        this.stage = stage;
-        this.scene = new Scene(this.root);
-        this.stage.setOnCloseRequest(event -> Platform.exit());
-        this.stage.setTitle("ermmmm");
-        this.stage.setScene(this.scene);
-        this.stage.sizeToScene();
-        this.stage.show();
-        Platform.runLater(() -> this.stage.setResizable(false));
-        Image backgroundImage = new Image("file:/Users/nickiazadi/Downloads/rocknroll.jpg");
-        ImageView imageView = new ImageView(backgroundImage);
-
-        searchButton.setOnAction(event -> {
-            searchButton.setDisable(true);
-            String keyword = searchBar.getCharacters().toString();
-            String state = searchBar2.getCharacters().toString();
-            String url = createUrl(keyword, state);
-            ApiResponse newResponse =  makeRequest(url);
-            List<String> eventNames = extractName(newResponse);
-            CustomHBox customHBox = new CustomHBox(eventNames);
-            all.getChildren().add(customHBox);
-            root.getChildren().add(all);
-
-        });
-        imageView.setFitWidth(600);
-        imageView.setFitHeight(400);
-        imageView.setPreserveRatio(true);
-        //StackPane root = new StackPane();
-        root.getChildren().add(imageView);
 
 
-    }
-
-    @Override
-    public void stop() {
-        System.out.println("stop() called");
-
-    }
 
 }
