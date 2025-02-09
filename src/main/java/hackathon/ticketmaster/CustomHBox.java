@@ -16,12 +16,12 @@ import java.util.List;
 public class CustomHBox extends HBox {
 
     private final List<TextField> textFields = new ArrayList<>();
-    public CustomHBox(List<String> eventNames) {
-        this.setSpacing(10); // Set spacing between inner HBoxes
-
+    public CustomHBox(ApiEvent[] events) {
         for (int i = 0; i < 4; i++) {
-            String eventName = (i < eventNames.size()) ? eventNames.get(i) : "";
-            HBox innerBox = createInnerHBox(eventName);
+            // Ensure there are enough events and handle null cases
+String name = (events != null && i < events.length && events[i] != null) ? events[i].name : "";
+
+HBox innerBox = createInnerHBox(name);
             this.getChildren().add(innerBox);
         }
     }

@@ -138,7 +138,7 @@ public class TicketmasterApp extends Application {
 
     }
 
-        public void showAlert(Throwable cause) {
+    public void showAlert(Throwable cause) {
 
         TextArea textarea = new TextArea("URI: ");
         textarea.appendText("\n\nException: " + cause.toString());
@@ -184,7 +184,7 @@ public class TicketmasterApp extends Application {
                 if (embedded != null && embedded.events != null) {
                     for (ApiEvent event : embedded.events) {  // Iterate over events
                         if (event != null && event.name != null) {
-                            if (nameSet.add(event.name)) {  // Ensure uniqueness
+                            if (nameSet.add(event.name)) {  // uniqueness
                                 eventNames.add(event.name);
                             }
                         }
@@ -197,8 +197,8 @@ public class TicketmasterApp extends Application {
             System.out.println(events);
         }
 
-        CustomHBox customHBox = new CustomHBox(eventNames);
-        root.getChildren().add(customHBox);
+        //CustomHBox customHBox = new CustomHBox(eventNames);
+        //root.getChildren().add(customHBox);
     }//extractUri
 
 
