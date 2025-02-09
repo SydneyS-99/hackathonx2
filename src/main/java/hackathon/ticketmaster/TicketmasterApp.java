@@ -109,8 +109,19 @@ public class TicketmasterApp extends Application {
             searchButton.setDisable(true);
             String keyword = searchBar.getCharacters().toString();
             String state = searchBar2.getCharacters().toString();
-            createUrl(keyword, state);
+            List<String> nameList = createUrl(keyword, state);
+            if (nameList.isEmpty()) {
+                System.out.println("Empty list");
+            }
+            //ApiEvent[] eventArray = nameList.toArray(new ApiEvent[0]);
+            ApiEvent[] eventArray = nameList.stream()
+            .map(name -> new ApiEvent(name)) // Convert each String to an ApiEvent
+            .toArray(ApiEvent[]::new);
+
+            CustomHBox customHBox = new CustomHBox(eventArray);
+                root.getChildren().add(customHBox);
             searchButton.setDisable(false);
+
         };
 
         searchButton.setOnAction(searchForResult);
@@ -151,7 +162,8 @@ public class TicketmasterApp extends Application {
     }
 
 
-    public void createUrl(String keyword, String state) {
+    public List<String> createUrl(String keyword, String state) {
+        List<String> namesList = new ArrayList<>();
         System.out.println("createUrl() running");
         try {
             String baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json?";
@@ -172,14 +184,16 @@ public class TicketmasterApp extends Application {
             System.out.println("JSON response: " + jsonResponse);
             responseObject = GSON.<ApiResponse>fromJson(jsonResponse, ApiResponse.class);
             System.out.println("After GSON");
-            extractName(responseObject);
+            namesList = extractName(responseObject);
             System.out.println("done with extract");
 
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
         }
+        return namesList;
+
     } //create url
-    private void  extractName(ApiResponse resp) {
+    private List<String> extractName(ApiResponse resp) {
         System.out.println("in extractName()");
         Set<String> nameSet = new HashSet<>();
         List<String> eventNames = new ArrayList<>();
@@ -201,6 +215,7 @@ public class TicketmasterApp extends Application {
         for (String events: eventNames) {
             System.out.println(events);
         }
+        return eventNames;
 
         //CustomHBox customHBox = new CustomHBox(eventNames);
         //root.getChildren().add(customHBox);

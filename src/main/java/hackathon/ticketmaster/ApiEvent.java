@@ -13,5 +13,9 @@ public class ApiEvent {
     public ApiImage[] images;
     public ApiEventDate dates;
 
+    public ApiEvent(String name) {
+        this.name = name;
+    }
+
 
 } //ApiEvent
