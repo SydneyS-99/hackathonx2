@@ -1,7 +1,14 @@
 package hackathon.ticketmaster;
 
+import hackathon.ticketmaster.CustomHBox;
 import hackathon.ticketmaster.ApiResponse;
 import hackathon.ticketmaster.ApiResult;
+import hackathon.ticketmaster.ApiEvent;
+import hackathon.ticketmaster.ApiEventDate;
+import hackathon.ticketmaster.ApiImage;
+import hackathon.ticketmaster.EmbeddedResponse;
+import hackathon.ticketmaster.EventDate;
+import hackathon.ticketmaster.EventStatus;
 import javafx.geometry.Insets;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -65,6 +72,7 @@ public class TicketmasterApp extends Application {
     ImageView imageView;
     Image backgroundImage;
     Button searchButton;
+    ApiResponse responseObject;
     //Button eventDetails;
 
 
@@ -101,12 +109,7 @@ public class TicketmasterApp extends Application {
             searchButton.setDisable(true);
             String keyword = searchBar.getCharacters().toString();
             String state = searchBar2.getCharacters().toString();
-            String url = createUrl(keyword, state);
-            System.out.println(url);
-            ApiResponse newResponse =  makeRequest(url);
-            List<String> eventNames = extractName(newResponse);
-            CustomHBox customHBox = new CustomHBox(eventNames);
-            root.getChildren().add(customHBox);
+            createUrl(keyword, state);
         };
 
         searchButton.setOnAction(searchForResult);
@@ -146,33 +149,33 @@ public class TicketmasterApp extends Application {
     }
 
 
-    public String createUrl(String keyword, String state) {
-        String baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json";
-        System.out.println(baseUrl);
-        String apiKey = "vPAEFFJwHsnJqoTOHwtBUeY0hjdiUrS0";
-        keyword = keyword.replace(" ", "%20");
-        String finalUrl = baseUrl + "?apikey=" + apiKey +
-            "&keyword=" + keyword + "&stateCode=" + state +
-            "&classificationName=music" + "&size =4"; //change size to adjust number of results
-        return finalUrl;
-    } //createurl
-
-    public ApiResponse makeRequest(String uri) { //createUrl should be parameter
+    public void  createUrl(String keyword, String state) {
+        Set<String> nameSet = new HashSet<>();
         try {
+            String baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json?";
+            System.out.println(baseUrl);
+            String apiKey = "vPAEFFJwHsnJqoTOHwtBUeY0hjdiUrS0";
+            keyword = keyword.replace(" ", "%20");
+            String uri = baseUrl + "apikey=" + apiKey +
+                "&keyword=" + keyword + "&city=" + state +
+                "&radius=100" + "&unit=miles";
             URI location = URI.create(uri);
-            HttpRequest req = HttpRequest.newBuilder().uri(location).GET().build();
+            HttpRequest req = HttpRequest.newBuilder().uri(location).build();
             HttpResponse<String> response = HTTP_CLIENT.send(req, BodyHandlers.ofString());
             if (response.statusCode() != 200) {
                 throw new IOException(uri + "ERROR:" + response.statusCode());
             }
-            System.out.println("Raw JSON Response: " + response.body());
-            return GSON.fromJson(response.body(), ApiResponse.class);
+
+            String jsonResponse = response.body();
+            responseObject = GSON.<ApiResponse>fromJson(jsonResponse, ApiResponse.class);
+            extractName(responseObject);
+            System.out.println("done with extract");
+
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-            return null;
-            }
-    } //makerequest
-    private List<String> extractName(ApiResponse resp) {
+        }
+    } //create url
+    private void  extractName(ApiResponse resp) {
         Set<String> nameSet = new HashSet<>();
         List<String> eventNames = new ArrayList<>();
 
@@ -189,8 +192,13 @@ public class TicketmasterApp extends Application {
                 }
             }
         }
-        return eventNames;
 
+        for (String events: eventNames) {
+            System.out.println(events);
+        }
+
+        CustomHBox customHBox = new CustomHBox(eventNames);
+        root.getChildren().add(customHBox);
     }//extractUri
 
 
