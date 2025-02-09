@@ -1,9 +1,15 @@
+
+
 package hackathon.ticketmaster;
+
+import com.google.gson.annotations.SerializedName;
 
 public class EventDate {
 
-    String localDate;
-    String localTime;
-    String dateTime;
+    @SerializedName("localDate")
+    public String localDate;
+    @SerializedName("localTime")
+    public String localTime;
+    public String dateTime;
 
 }//EventDate

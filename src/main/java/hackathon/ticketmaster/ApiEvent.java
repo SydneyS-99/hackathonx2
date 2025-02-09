@@ -5,13 +5,13 @@ import hackathon.ticketmaster.ApiEventDate;
 
 public class ApiEvent {
 
-    String name;
-    String type;
-    String id;
-    boolean test;
-    String locale;
-    ApiImage[] images;
-    ApiEventDate dates;
+    public String name;
+    public String type;
+    public String id;
+    public boolean test;
+    public String locale;
+    public ApiImage[] images;
+    public ApiEventDate dates;
 
 
 } //ApiEvent

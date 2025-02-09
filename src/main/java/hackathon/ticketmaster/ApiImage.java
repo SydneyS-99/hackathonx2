@@ -1,10 +1,10 @@
 package hackathon.ticketmaster;
 
 public class ApiImage {
-    String ratio;
-    String url;
-    int width;
-    int height;
-    boolean fallback;
+    public String ratio;
+    public String url;
+    public int width;
+    public int height;
+    public boolean fallback;
 
 }// ApiImage

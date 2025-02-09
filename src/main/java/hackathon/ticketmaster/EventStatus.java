@@ -2,6 +2,6 @@ package hackathon.ticketmaster;
 
 public class EventStatus {
 
-    String code;
+    public String code;
 
 } //EventStatus
