@@ -119,15 +119,26 @@ public class TicketmasterApp extends Application {
             .toArray(ApiEvent[]::new);
 
             CustomHBox customHBox = new CustomHBox(eventArray);
-                root.getChildren().add(customHBox);
+            root.getChildren().add(customHBox);
+            imageView.setVisible(false);
+            System.out.println("CustomHBox added. Children count: " + root.getChildren().size());
             searchButton.setDisable(false);
+            imageView.setVisible(false);
+            customHBox.setVisible(true);
+            customHBox.setPrefWidth(Double.MAX_VALUE); // Set it to fill available width
+            customHBox.setPrefHeight(Double.MAX_VALUE); // Set it to fill available height
+            HBox.setHgrow(customHBox, Priority.ALWAYS);
 
+            Platform.runLater(() -> {
+                System.out.println("CustomHBox width: " + customHBox.getWidth());
+                System.out.println("CustomHBox height: " + customHBox.getHeight());
+            });
         };
 
         searchButton.setOnAction(searchForResult);
-        imageView.setFitWidth(600);
-        imageView.setFitHeight(400);
-        imageView.setPreserveRatio(true);
+        //imageView.setFitWidth(600);
+        //imageView.setFitHeight(400);
+        //imageView.setPreserveRatio(true);
 
     }
 
