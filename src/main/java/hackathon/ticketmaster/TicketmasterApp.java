@@ -179,19 +179,19 @@ public class TicketmasterApp extends Application {
         Set<String> nameSet = new HashSet<>();
         List<String> eventNames = new ArrayList<>();
 
-        if (resp != null && resp._embedded != null) {
-            for (EmbeddedResponse embedded : resp._embedded) {  // Iterate over the array
-                if (embedded != null && embedded.events != null) {
-                    for (ApiEvent event : embedded.events) {  // Iterate over events
-                        if (event != null && event.name != null) {
-                            if (nameSet.add(event.name)) {  // Ensure uniqueness
-                                eventNames.add(event.name);
-                            }
-                        }
-                    }
+        //        if (resp != null && resp._embedded != null) {
+        for (EmbeddedResponse embedded : resp._embedded) {  // Iterate over the array
+            //                if (embedded != null && embedded.events != null) {
+            for (ApiEvent event : embedded.events) {  // Iterate over events
+                //      if (event != null && event.name != null) {
+                if (nameSet.add(event.name)) {  // Ensure uniqueness
+                    eventNames.add(event.name);
                 }
             }
         }
+            //          }
+    //          }
+//        }
 
         for (String events: eventNames) {
             System.out.println(events);
