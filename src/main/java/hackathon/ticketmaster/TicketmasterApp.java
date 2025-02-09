@@ -80,9 +80,6 @@ public class TicketmasterApp extends Application {
         this.searchButton = new Button("Search");
         this.backgroundImage = new Image("file:rocknroll.jpg");
         this.imageView = new ImageView(this.backgroundImage);
-        backgroundImage = new Image("file:/Users/nickiazadi/Downloads/rocknroll.jpg");
-        imageView = new ImageView(backgroundImage);
-
     }
 
     @Override
@@ -98,9 +95,10 @@ public class TicketmasterApp extends Application {
         imageView.setFitHeight(400);
 
 
+
         EventHandler<ActionEvent> searchForResult = (ActionEvent ae) -> {
             System.out.println("yeehaw");
-             searchButton.setDisable(true);
+            searchButton.setDisable(true);
             String keyword = searchBar.getCharacters().toString();
             String state = searchBar2.getCharacters().toString();
             String url = createUrl(keyword, state);
@@ -115,8 +113,6 @@ public class TicketmasterApp extends Application {
         imageView.setFitWidth(600);
         imageView.setFitHeight(400);
         imageView.setPreserveRatio(true);
-        //StackPane root = new StackPane();
-
     }
 
     @Override
